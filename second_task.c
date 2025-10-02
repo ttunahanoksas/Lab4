@@ -1,25 +1,47 @@
-/* Task description:
-First part: Stammering (or stuttering) is a speech disorder when syllables (usually the first one in the words) are unintentionally repeated. 
-Look at the following ahartihifihicihiahal stahammehereher cohodehe (artificial stammerer code)
-for this you are not required to use your own functions
-
-Second part:Write a function to distinguish vowels from other letters (the function receives a character, and returns whether it is a vovel or not). 
-Modify the program above to use this function in main().
-For now we do not use the function many times, but we could! Please note that the program is much more readable now!
-
-Third part: How to make it work for words starting with a capital? Like, for the word „Apart” „Ahapahart” should be printed. 
-To accomplish this the program must be able to identify uppercase vowels, too. The original character should be printed before h, and the lowercase counterpart after it. 
-You can use your existing vowel() function for deciding but always pass the lowercase letter to it.
-Hint:
-There are character handling library functions in #include <ctype.h>. One of them is tolower(). The tolower(c) expression is the lowercase counterpart of c if it is an uppercase letter, 
-for any other character it returns the original character.
-
-*/
-
-
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
-int main(){
+// Function to check if a character is a vowel
+int isVowel(char c) {
+    c = tolower(c);
+    return (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u');
+}
 
-return 0;
+// Function to extract the first syllable (up to and including the first vowel)
+void getFirstSyllable(const char *word, char *syllable) {
+    int i = 0;
+    while (word[i] != '\0') {
+        syllable[i] = word[i];
+        if (isVowel(word[i])) {
+            syllable[i + 1] = '\0';
+            return;
+        }
+        i++;
+    }
+    syllable[i] = '\0'; // fallback (no vowel found)
+}
+
+// Function to apply stammerer code
+void stammerer(const char *word, char *result) {
+    char syllable[50];
+    getFirstSyllable(word, syllable);
+
+    // Repeat syllable twice before the word
+    strcpy(result, syllable);
+    strcat(result, syllable);
+    strcat(result, word);
+}
+
+int main() {
+    char word[100], result[200];
+
+    printf("Enter a word: ");
+    scanf("%99s", word);
+
+    stammerer(word, result);
+
+    printf("Stammered word: %s\n", result);
+
+    return 0;
 }
